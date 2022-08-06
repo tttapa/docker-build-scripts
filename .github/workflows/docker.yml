@@ -87,6 +87,7 @@ jobs:
         with:
           context: .
           platforms: ${{ env.PLATFORMS }}
+          target: alpaqa-build-static
           build-args: |
             "GCC_VERSION=${{ matrix.gcc-version }}"
             "PYTHON_VERSION=${{ matrix.python-version }}"
@@ -136,6 +137,7 @@ jobs:
         with:
           context: .
           platforms: ${{ env.PLATFORMS }}
+          target: alpaqa-build
           build-args: |
             "GCC_VERSION=${{ matrix.gcc-version }}"
             "PYTHON_VERSION=${{ matrix.python-version }}"
@@ -187,6 +189,7 @@ jobs:
         with:
           context: .
           platforms: ${{ env.PLATFORMS }}
+          target: alpaqa-docs
           build-args: |
             "GCC_VERSION=${{ matrix.gcc-version }}"
             "PYTHON_VERSION=${{ matrix.python-version }}"
@@ -238,6 +241,7 @@ jobs:
         with:
           context: .
           platforms: ${{ env.PLATFORMS }}
+          target: alpaqa-test-static
           build-args: |
             "GCC_VERSION=${{ matrix.gcc-version }}"
             "PYTHON_VERSION=${{ matrix.python-version }}"
@@ -289,6 +293,7 @@ jobs:
         with:
           context: .
           platforms: ${{ env.PLATFORMS }}
+          target: alpaqa-test
           build-args: |
             "GCC_VERSION=${{ matrix.gcc-version }}"
             "PYTHON_VERSION=${{ matrix.python-version }}"
