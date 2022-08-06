@@ -2,7 +2,7 @@
 cd "$( dirname "${BASH_SOURCE[0]}" )"/..
 
 prefix="$1" # Installation directory prefix
-build_type="${2:-RelWithDebInfo}"
+build_type="${2:-Release}"
 version="3.5.5"
 
 if [ -z "$prefix" ]; then
