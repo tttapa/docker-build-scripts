@@ -1,35 +1,65 @@
-ARG GCC_VERSION
-ARG PYTHON_VERSION
-
 # Base -------------------------------------------------------------------------
 
-FROM ghcr.io/tttapa/docker-python-build:gcc${GCC_VERSION}-py${PYTHON_VERSION} \
-    as base
+FROM ubuntu:jammy as build-base
 
 RUN export DEBIAN_FRONTEND=noninteractive && \
     apt-get update -y && \
     apt-get install --no-install-recommends -y \
-        zip unzip && \
+        cmake make ninja-build g++ gcc git wget ca-certificates && \
     apt-get clean autoclean && \
     apt-get autoremove -y && \
     rm -rf /var/lib/apt/lists/*
 
-FROM base as ninja
+FROM ghcr.io/tttapa/docker-centos7-toolchain:0.0.1a2 as compat-build-base
 
-RUN wget https://github.com/ninja-build/ninja/releases/download/v1.11.0/ninja-linux.zip && \
-    unzip ninja-linux.zip && \
-    rm -f ninja-linux.zip && \
-    mv ninja "/usr/local/bin"
-RUN ninja --version
+USER root
+RUN chown develop /opt
+USER develop
+
+# Python -----------------------------------------------------------------------
+
+FROM ubuntu:jammy as python
+
+RUN export DEBIAN_FRONTEND=noninteractive && \
+    apt-get update -y && \
+    apt-get install -y --no-install-recommends \
+        gcc g++ \
+        wget ca-certificates \
+        make pkg-config autotools-dev automake libpcre3-dev \
+        zlib1g-dev libbz2-dev libssl-dev uuid-dev libffi-dev libreadline-dev \
+        libsqlite3-dev libbz2-dev libncurses5-dev libreadline6-dev \
+        libgdbm-dev libgdbm-compat-dev liblzma-dev && \
+    apt-get clean autoclean && \
+    apt-get autoremove -y && \
+    rm -rf /var/lib/apt/lists/*
+
+ARG PYTHON_VERSION
+COPY install-python.sh .
+RUN bash install-python.sh ${PYTHON_VERSION} "/opt/python"
 
 # Documentation ----------------------------------------------------------------
 
-FROM ninja as doxygen
+FROM build-base as doxygen
 
 RUN export DEBIAN_FRONTEND=noninteractive && \
     apt-get update -y && \
     apt-get install --no-install-recommends -y \
-        bison flex graphviz libjson-perl libperlio-gzip-perl perl && \
+        bison flex && \
+    apt-get clean autoclean && \
+    apt-get autoremove -y && \
+    rm -rf /var/lib/apt/lists/*
+
+COPY --from=python /opt/python/ /usr/local/
+
+COPY install-doxygen.sh .
+RUN bash ./install-doxygen.sh "master" "/opt/doxygen"
+
+FROM build-base as docs
+
+RUN export DEBIAN_FRONTEND=noninteractive && \
+    apt-get update -y && \
+    apt-get install --no-install-recommends -y \
+        graphviz libjson-perl libperlio-gzip-perl perl && \
     apt-get clean autoclean && \
     apt-get autoremove -y && \
     rm -rf /var/lib/apt/lists/*
@@ -37,27 +67,26 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
 COPY install-lcov.sh .
 RUN bash ./install-lcov.sh "v1.15" "/usr/local"
 
-COPY install-doxygen.sh .
-RUN bash ./install-doxygen.sh "master" "/usr/local"
+COPY --from=doxygen /opt/doxygen/ /usr/local/
 
 # Scientific -------------------------------------------------------------------
 
-FROM ninja as casadi
+FROM compat-build-base as casadi
 
 COPY install-casadi.sh .
 RUN bash install-casadi.sh "/opt/casadi"
 
-FROM ninja as casadi-static
+FROM compat-build-base as casadi-static
 
 COPY install-casadi-static.sh .
 RUN bash install-casadi-static.sh "/opt/casadi-static"
 
-FROM ninja as eigen
+FROM compat-build-base as eigen
 
 COPY install-eigen.sh .
 RUN bash install-eigen.sh "/opt/eigen"
 
-FROM ninja as gtest
+FROM compat-build-base as gtest
 
 COPY install-gtest.sh .
 RUN bash install-gtest.sh "/opt/gtest"
@@ -65,26 +94,41 @@ RUN bash install-gtest.sh "/opt/gtest"
 # Alpaqa -----------------------------------------------------------------------
 
 # Full build with shared CasADi
-FROM ninja as alpaqa-build
+FROM compat-build-base as alpaqa-build
 
 COPY --from=eigen /opt/eigen/ /usr/local/
 COPY --from=gtest /opt/gtest/ /usr/local/
 COPY --from=casadi /opt/casadi/ /usr/local/
+USER root
 RUN ldconfig
+USER develop
 
 # Full build with static CasADi
-FROM ninja as alpaqa-build-static
+FROM compat-build-base as alpaqa-build-static
 
 COPY --from=eigen /opt/eigen/ /usr/local/
 COPY --from=gtest /opt/gtest/ /usr/local/
 COPY --from=casadi-static /opt/casadi-static/ /usr/local/
+USER root
 RUN ldconfig
+USER develop
+
+# Python build
+FROM alpaqa-build-static as alpaqa-python-build
+
+COPY --from=python /opt/python/ /usr/local/
+USER root
+RUN ldconfig
+USER develop
 
 # Documentation with basic dependencies (no CasADi)
-FROM doxygen as alpaqa-docs
+FROM docs as alpaqa-docs
 
 COPY --from=eigen /opt/eigen/ /usr/local/
 COPY --from=gtest /opt/gtest/ /usr/local/
+COPY --from=casadi-static /opt/casadi-static/ /usr/local/
+COPY --from=python /opt/python/ /usr/local/
+RUN ldconfig
 
 # Limited Ubuntu image for testing Linux package
 FROM ubuntu:jammy as alpaqa-test-base
