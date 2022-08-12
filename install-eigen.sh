@@ -26,7 +26,8 @@ pushd /tmp
 pushd eigen
 cmake -S. -Bbuild \
     -G "Ninja Multi-Config" \
-    -D CMAKE_INSTALL_PREFIX="$prefix"
+    -D CMAKE_INSTALL_PREFIX="$prefix" \
+    -D CMAKE_POSITION_INDEPENDENT_CODE=On
 cmake --build build -j --config $build_type
 cmake --install build --config $build_type
 popd
