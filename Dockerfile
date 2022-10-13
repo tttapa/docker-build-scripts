@@ -25,6 +25,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     apt-get install -y --no-install-recommends \
         gcc g++ \
         wget ca-certificates \
+        bzip2 \
         make pkg-config autotools-dev automake libpcre3-dev \
         zlib1g-dev libbz2-dev libssl-dev uuid-dev libffi-dev libreadline-dev \
         libsqlite3-dev libbz2-dev libncurses5-dev libreadline6-dev \

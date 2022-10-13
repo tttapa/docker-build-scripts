@@ -3,7 +3,7 @@
 cd "$(dirname "${BASH_SOURCE[0]}")"
 set -ex
 
-for py_version in 3.7 3.8 3.9 3.10 3.11; do
+for py_version in 3.7 3.8 3.9 3.10 3.11 pypy3.7 pypy3.8 pypy3.9; do
     docker buildx build \
         --build-arg PYTHON_VERSION=$py_version \
         --target alpaqa-python-build \
