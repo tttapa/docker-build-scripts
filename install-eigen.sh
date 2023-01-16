@@ -2,7 +2,7 @@
 
 prefix="$1" # Installation directory prefix
 build_type="${2:-RelWithDebInfo}"
-version="3.4.0"
+version="master"
 
 if [ -z "$prefix" ]; then
     if [ -z "$VIRTUAL_ENV" ]; then
