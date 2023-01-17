@@ -80,7 +80,6 @@ jobs:
           platforms: ${{ env.PLATFORMS }}
           target: alpaqa-python-build
           build-args: |
-            "GCC_VERSION=${{ matrix.gcc-version }}"
             "PYTHON_VERSION=${{ matrix.python-version }}"
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta-alpaqa-python-build.outputs.tags }}
@@ -119,7 +118,6 @@ jobs:
           platforms: ${{ env.PLATFORMS }}
           target: alpaqa-build-static
           build-args: |
-            "GCC_VERSION=${{ matrix.gcc-version }}"
             "PYTHON_VERSION=${{ matrix.python-version }}"
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta-alpaqa-build-static.outputs.tags }}
@@ -158,7 +156,6 @@ jobs:
           platforms: ${{ env.PLATFORMS }}
           target: alpaqa-build
           build-args: |
-            "GCC_VERSION=${{ matrix.gcc-version }}"
             "PYTHON_VERSION=${{ matrix.python-version }}"
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta-alpaqa-build.outputs.tags }}
@@ -197,7 +194,6 @@ jobs:
           platforms: ${{ env.PLATFORMS }}
           target: alpaqa-docs
           build-args: |
-            "GCC_VERSION=${{ matrix.gcc-version }}"
             "PYTHON_VERSION=${{ matrix.python-version }}"
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta-alpaqa-docs.outputs.tags }}
@@ -236,7 +232,6 @@ jobs:
           platforms: ${{ env.PLATFORMS }}
           target: alpaqa-test-static
           build-args: |
-            "GCC_VERSION=${{ matrix.gcc-version }}"
             "PYTHON_VERSION=${{ matrix.python-version }}"
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta-alpaqa-test-static.outputs.tags }}
@@ -275,7 +270,6 @@ jobs:
           platforms: ${{ env.PLATFORMS }}
           target: alpaqa-test
           build-args: |
-            "GCC_VERSION=${{ matrix.gcc-version }}"
             "PYTHON_VERSION=${{ matrix.python-version }}"
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta-alpaqa-test.outputs.tags }}
