@@ -4,7 +4,7 @@
 
 set -ex
 
-version="${1:-Release_1_9_4}" # Release tag on GitHub
+version="${1:-Release_1_9_6}" # Release tag on GitHub
 prefix="${2:-/usr/local}"     # Install prefix
 tmpdir="/tmp/doxygen-build"   # Temporary build folder
 
