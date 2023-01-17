@@ -51,117 +51,117 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # alpaqa Python build ----------------------------------------------------
+      # # alpaqa Python build ----------------------------------------------------
 
-      # Extract metadata (tags, labels) for Docker
-      # https://github.com/docker/metadata-action
-      - name: Extract Docker metadata
-        id: meta-alpaqa-python-build
-        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
-        with:
-          images: ${{ env.REGISTRY }}/tttapa/alpaqa-python-build
-          flavor: |
-            latest=${{ matrix.python-version == '3.10' }}
-            prefix=py${{ matrix.python-version }}-
-          tags: |
-            type=schedule
-            type=ref,event=branch
-            type=ref,event=tag
-            type=ref,event=pr
-            type=raw,value=py${{ matrix.python-version }},prefix=
+      # # Extract metadata (tags, labels) for Docker
+      # # https://github.com/docker/metadata-action
+      # - name: Extract Docker metadata
+      #   id: meta-alpaqa-python-build
+      #   uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+      #   with:
+      #     images: ${{ env.REGISTRY }}/tttapa/alpaqa-python-build
+      #     flavor: |
+      #       latest=${{ matrix.python-version == '3.10' }}
+      #       prefix=py${{ matrix.python-version }}-
+      #     tags: |
+      #       type=schedule
+      #       type=ref,event=branch
+      #       type=ref,event=tag
+      #       type=ref,event=pr
+      #       type=raw,value=py${{ matrix.python-version }},prefix=
 
-      # Build and push Docker image with Buildx (don't push on PR)
-      # https://github.com/docker/build-push-action
-      - name: Build and push Docker image
-        id: build-and-push-alpaqa-python-build
-        uses: docker/build-push-action@c84f38281176d4c9cdb1626ffafcd6b3911b5d94
-        with:
-          context: .
-          platforms: ${{ env.PLATFORMS }}
-          target: alpaqa-python-build
-          build-args: |
-            "PYTHON_VERSION=${{ matrix.python-version }}"
-          push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta-alpaqa-python-build.outputs.tags }}
-          labels: ${{ steps.meta-alpaqa-python-build.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+      # # Build and push Docker image with Buildx (don't push on PR)
+      # # https://github.com/docker/build-push-action
+      # - name: Build and push Docker image
+      #   id: build-and-push-alpaqa-python-build
+      #   uses: docker/build-push-action@c84f38281176d4c9cdb1626ffafcd6b3911b5d94
+      #   with:
+      #     context: .
+      #     platforms: ${{ env.PLATFORMS }}
+      #     target: alpaqa-python-build
+      #     build-args: |
+      #       "PYTHON_VERSION=${{ matrix.python-version }}"
+      #     push: ${{ github.event_name != 'pull_request' }}
+      #     tags: ${{ steps.meta-alpaqa-python-build.outputs.tags }}
+      #     labels: ${{ steps.meta-alpaqa-python-build.outputs.labels }}
+      #     cache-from: type=gha
+      #     cache-to: type=gha,mode=max
 
-      # alpaqa build static ----------------------------------------------------
+      # # alpaqa build static ----------------------------------------------------
 
-      # Extract metadata (tags, labels) for Docker
-      # https://github.com/docker/metadata-action
-      - name: Extract Docker metadata
-        id: meta-alpaqa-build-static
-        if: ${{ matrix.python-version == '3.10' }}
-        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
-        with:
-          images: ${{ env.REGISTRY }}/tttapa/alpaqa-build-static
-          flavor: |
-            latest=${{ matrix.python-version == '3.10' }}
-            prefix=py${{ matrix.python-version }}-
-          tags: |
-            type=schedule
-            type=ref,event=branch
-            type=ref,event=tag
-            type=ref,event=pr
-            type=raw,value=py${{ matrix.python-version }},prefix=
+      # # Extract metadata (tags, labels) for Docker
+      # # https://github.com/docker/metadata-action
+      # - name: Extract Docker metadata
+      #   id: meta-alpaqa-build-static
+      #   if: ${{ matrix.python-version == '3.10' }}
+      #   uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+      #   with:
+      #     images: ${{ env.REGISTRY }}/tttapa/alpaqa-build-static
+      #     flavor: |
+      #       latest=${{ matrix.python-version == '3.10' }}
+      #       prefix=py${{ matrix.python-version }}-
+      #     tags: |
+      #       type=schedule
+      #       type=ref,event=branch
+      #       type=ref,event=tag
+      #       type=ref,event=pr
+      #       type=raw,value=py${{ matrix.python-version }},prefix=
 
-      # Build and push Docker image with Buildx (don't push on PR)
-      # https://github.com/docker/build-push-action
-      - name: Build and push Docker image
-        id: build-and-push-alpaqa-build-static
-        if: ${{ matrix.python-version == '3.10' }}
-        uses: docker/build-push-action@c84f38281176d4c9cdb1626ffafcd6b3911b5d94
-        with:
-          context: .
-          platforms: ${{ env.PLATFORMS }}
-          target: alpaqa-build-static
-          build-args: |
-            "PYTHON_VERSION=${{ matrix.python-version }}"
-          push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta-alpaqa-build-static.outputs.tags }}
-          labels: ${{ steps.meta-alpaqa-build-static.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+      # # Build and push Docker image with Buildx (don't push on PR)
+      # # https://github.com/docker/build-push-action
+      # - name: Build and push Docker image
+      #   id: build-and-push-alpaqa-build-static
+      #   if: ${{ matrix.python-version == '3.10' }}
+      #   uses: docker/build-push-action@c84f38281176d4c9cdb1626ffafcd6b3911b5d94
+      #   with:
+      #     context: .
+      #     platforms: ${{ env.PLATFORMS }}
+      #     target: alpaqa-build-static
+      #     build-args: |
+      #       "PYTHON_VERSION=${{ matrix.python-version }}"
+      #     push: ${{ github.event_name != 'pull_request' }}
+      #     tags: ${{ steps.meta-alpaqa-build-static.outputs.tags }}
+      #     labels: ${{ steps.meta-alpaqa-build-static.outputs.labels }}
+      #     cache-from: type=gha
+      #     cache-to: type=gha,mode=max
 
-      # alpaqa build -----------------------------------------------------------
+      # # alpaqa build -----------------------------------------------------------
 
-      # Extract metadata (tags, labels) for Docker
-      # https://github.com/docker/metadata-action
-      - name: Extract Docker metadata
-        id: meta-alpaqa-build
-        if: ${{ matrix.python-version == '3.10' }}
-        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
-        with:
-          images: ${{ env.REGISTRY }}/tttapa/alpaqa-build
-          flavor: |
-            latest=${{ matrix.python-version == '3.10' }}
-            prefix=py${{ matrix.python-version }}-
-          tags: |
-            type=schedule
-            type=ref,event=branch
-            type=ref,event=tag
-            type=ref,event=pr
-            type=raw,value=py${{ matrix.python-version }},prefix=
+      # # Extract metadata (tags, labels) for Docker
+      # # https://github.com/docker/metadata-action
+      # - name: Extract Docker metadata
+      #   id: meta-alpaqa-build
+      #   if: ${{ matrix.python-version == '3.10' }}
+      #   uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+      #   with:
+      #     images: ${{ env.REGISTRY }}/tttapa/alpaqa-build
+      #     flavor: |
+      #       latest=${{ matrix.python-version == '3.10' }}
+      #       prefix=py${{ matrix.python-version }}-
+      #     tags: |
+      #       type=schedule
+      #       type=ref,event=branch
+      #       type=ref,event=tag
+      #       type=ref,event=pr
+      #       type=raw,value=py${{ matrix.python-version }},prefix=
 
-      # Build and push Docker image with Buildx (don't push on PR)
-      # https://github.com/docker/build-push-action
-      - name: Build and push Docker image
-        id: build-and-push-alpaqa-build
-        if: ${{ matrix.python-version == '3.10' }}
-        uses: docker/build-push-action@c84f38281176d4c9cdb1626ffafcd6b3911b5d94
-        with:
-          context: .
-          platforms: ${{ env.PLATFORMS }}
-          target: alpaqa-build
-          build-args: |
-            "PYTHON_VERSION=${{ matrix.python-version }}"
-          push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta-alpaqa-build.outputs.tags }}
-          labels: ${{ steps.meta-alpaqa-build.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+      # # Build and push Docker image with Buildx (don't push on PR)
+      # # https://github.com/docker/build-push-action
+      # - name: Build and push Docker image
+      #   id: build-and-push-alpaqa-build
+      #   if: ${{ matrix.python-version == '3.10' }}
+      #   uses: docker/build-push-action@c84f38281176d4c9cdb1626ffafcd6b3911b5d94
+      #   with:
+      #     context: .
+      #     platforms: ${{ env.PLATFORMS }}
+      #     target: alpaqa-build
+      #     build-args: |
+      #       "PYTHON_VERSION=${{ matrix.python-version }}"
+      #     push: ${{ github.event_name != 'pull_request' }}
+      #     tags: ${{ steps.meta-alpaqa-build.outputs.tags }}
+      #     labels: ${{ steps.meta-alpaqa-build.outputs.labels }}
+      #     cache-from: type=gha
+      #     cache-to: type=gha,mode=max
 
       # alpaqa docs ------------------------------------------------------------
 
@@ -201,78 +201,78 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      # alpaqa test static -----------------------------------------------------
+      # # alpaqa test static -----------------------------------------------------
 
-      # Extract metadata (tags, labels) for Docker
-      # https://github.com/docker/metadata-action
-      - name: Extract Docker metadata
-        id: meta-alpaqa-test-static
-        if: ${{ matrix.python-version == '3.10' }}
-        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
-        with:
-          images: ${{ env.REGISTRY }}/tttapa/alpaqa-test-static
-          flavor: |
-            latest=${{ matrix.python-version == '3.10' }}
-            prefix=py${{ matrix.python-version }}-
-          tags: |
-            type=schedule
-            type=ref,event=branch
-            type=ref,event=tag
-            type=ref,event=pr
-            type=raw,value=py${{ matrix.python-version }},prefix=
+      # # Extract metadata (tags, labels) for Docker
+      # # https://github.com/docker/metadata-action
+      # - name: Extract Docker metadata
+      #   id: meta-alpaqa-test-static
+      #   if: ${{ matrix.python-version == '3.10' }}
+      #   uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+      #   with:
+      #     images: ${{ env.REGISTRY }}/tttapa/alpaqa-test-static
+      #     flavor: |
+      #       latest=${{ matrix.python-version == '3.10' }}
+      #       prefix=py${{ matrix.python-version }}-
+      #     tags: |
+      #       type=schedule
+      #       type=ref,event=branch
+      #       type=ref,event=tag
+      #       type=ref,event=pr
+      #       type=raw,value=py${{ matrix.python-version }},prefix=
 
-      # Build and push Docker image with Buildx (don't push on PR)
-      # https://github.com/docker/build-push-action
-      - name: Build and push Docker image
-        id: build-and-push-alpaqa-test-static
-        if: ${{ matrix.python-version == '3.10' }}
-        uses: docker/build-push-action@c84f38281176d4c9cdb1626ffafcd6b3911b5d94
-        with:
-          context: .
-          platforms: ${{ env.PLATFORMS }}
-          target: alpaqa-test-static
-          build-args: |
-            "PYTHON_VERSION=${{ matrix.python-version }}"
-          push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta-alpaqa-test-static.outputs.tags }}
-          labels: ${{ steps.meta-alpaqa-test-static.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+      # # Build and push Docker image with Buildx (don't push on PR)
+      # # https://github.com/docker/build-push-action
+      # - name: Build and push Docker image
+      #   id: build-and-push-alpaqa-test-static
+      #   if: ${{ matrix.python-version == '3.10' }}
+      #   uses: docker/build-push-action@c84f38281176d4c9cdb1626ffafcd6b3911b5d94
+      #   with:
+      #     context: .
+      #     platforms: ${{ env.PLATFORMS }}
+      #     target: alpaqa-test-static
+      #     build-args: |
+      #       "PYTHON_VERSION=${{ matrix.python-version }}"
+      #     push: ${{ github.event_name != 'pull_request' }}
+      #     tags: ${{ steps.meta-alpaqa-test-static.outputs.tags }}
+      #     labels: ${{ steps.meta-alpaqa-test-static.outputs.labels }}
+      #     cache-from: type=gha
+      #     cache-to: type=gha,mode=max
 
-      # alpaqa test ------------------------------------------------------------
+      # # alpaqa test ------------------------------------------------------------
 
-      # Extract metadata (tags, labels) for Docker
-      # https://github.com/docker/metadata-action
-      - name: Extract Docker metadata
-        id: meta-alpaqa-test
-        if: ${{ matrix.python-version == '3.10' }}
-        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
-        with:
-          images: ${{ env.REGISTRY }}/tttapa/alpaqa-test
-          flavor: |
-            latest=${{ matrix.python-version == '3.10' }}
-            prefix=py${{ matrix.python-version }}-
-          tags: |
-            type=schedule
-            type=ref,event=branch
-            type=ref,event=tag
-            type=ref,event=pr
-            type=raw,value=py${{ matrix.python-version }},prefix=
+      # # Extract metadata (tags, labels) for Docker
+      # # https://github.com/docker/metadata-action
+      # - name: Extract Docker metadata
+      #   id: meta-alpaqa-test
+      #   if: ${{ matrix.python-version == '3.10' }}
+      #   uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+      #   with:
+      #     images: ${{ env.REGISTRY }}/tttapa/alpaqa-test
+      #     flavor: |
+      #       latest=${{ matrix.python-version == '3.10' }}
+      #       prefix=py${{ matrix.python-version }}-
+      #     tags: |
+      #       type=schedule
+      #       type=ref,event=branch
+      #       type=ref,event=tag
+      #       type=ref,event=pr
+      #       type=raw,value=py${{ matrix.python-version }},prefix=
 
-      # Build and push Docker image with Buildx (don't push on PR)
-      # https://github.com/docker/build-push-action
-      - name: Build and push Docker image
-        id: build-and-push-alpaqa-test
-        if: ${{ matrix.python-version == '3.10' }}
-        uses: docker/build-push-action@c84f38281176d4c9cdb1626ffafcd6b3911b5d94
-        with:
-          context: .
-          platforms: ${{ env.PLATFORMS }}
-          target: alpaqa-test
-          build-args: |
-            "PYTHON_VERSION=${{ matrix.python-version }}"
-          push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta-alpaqa-test.outputs.tags }}
-          labels: ${{ steps.meta-alpaqa-test.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+      # # Build and push Docker image with Buildx (don't push on PR)
+      # # https://github.com/docker/build-push-action
+      # - name: Build and push Docker image
+      #   id: build-and-push-alpaqa-test
+      #   if: ${{ matrix.python-version == '3.10' }}
+      #   uses: docker/build-push-action@c84f38281176d4c9cdb1626ffafcd6b3911b5d94
+      #   with:
+      #     context: .
+      #     platforms: ${{ env.PLATFORMS }}
+      #     target: alpaqa-test
+      #     build-args: |
+      #       "PYTHON_VERSION=${{ matrix.python-version }}"
+      #     push: ${{ github.event_name != 'pull_request' }}
+      #     tags: ${{ steps.meta-alpaqa-test.outputs.tags }}
+      #     labels: ${{ steps.meta-alpaqa-test.outputs.labels }}
+      #     cache-from: type=gha
+      #     cache-to: type=gha,mode=max
