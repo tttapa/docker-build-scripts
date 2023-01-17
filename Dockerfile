@@ -53,14 +53,14 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
 COPY --from=python /opt/python/ /usr/local/
 
 COPY install-doxygen.sh .
-RUN bash ./install-doxygen.sh "master" "/opt/doxygen"
+RUN bash ./install-doxygen.sh "Release_1_9_6" "/opt/doxygen"
 
 FROM build-base as docs
 
 RUN export DEBIAN_FRONTEND=noninteractive && \
     apt-get update -y && \
     apt-get install --no-install-recommends -y \
-        graphviz libjson-perl libperlio-gzip-perl perl texlive-binaries && \
+        graphviz libjson-perl libperlio-gzip-perl perl texlive-bibtex-extra && \
     apt-get clean autoclean && \
     apt-get autoremove -y && \
     rm -rf /var/lib/apt/lists/*
