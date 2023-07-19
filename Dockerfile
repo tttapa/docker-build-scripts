@@ -5,7 +5,7 @@ FROM ubuntu:jammy as build-base
 RUN export DEBIAN_FRONTEND=noninteractive && \
     apt-get update -y && \
     apt-get install --no-install-recommends -y \
-        cmake make ninja-build g++ gcc git wget ca-certificates && \
+        cmake make ninja-build g++ gcc git wget ca-certificates ccache && \
     apt-get clean autoclean && \
     apt-get autoremove -y && \
     rm -rf /var/lib/apt/lists/*
