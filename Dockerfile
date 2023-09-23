@@ -4,11 +4,17 @@ FROM ubuntu:jammy as build-base
 
 RUN export DEBIAN_FRONTEND=noninteractive && \
     apt-get update -y && \
+    apt-get install -y software-properties-common && \
+    add-apt-repository ppa:ubuntu-toolchain-r/test && \
+    apt-get update -y && \
     apt-get install --no-install-recommends -y \
-        cmake make ninja-build g++ gcc git wget ca-certificates ccache && \
+        cmake make ninja-build g++-13 gcc-13 gfortran-13 \
+        git wget ca-certificates ccache && \
     apt-get clean autoclean && \
     apt-get autoremove -y && \
     rm -rf /var/lib/apt/lists/*
+COPY gcc.sh .
+RUN bash gcc.sh 13
 
 FROM ghcr.io/tttapa/docker-centos7-toolchain:0.0.1a2 as compat-build-base
 
