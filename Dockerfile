@@ -59,7 +59,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
 COPY --from=python /opt/python/ /usr/local/
 
 COPY install-doxygen.sh .
-RUN bash ./install-doxygen.sh "Release_1_9_6" "/opt/doxygen"
+RUN bash ./install-doxygen.sh "Release_1_9_8" "/opt/doxygen"
 
 FROM build-base as docs
 
